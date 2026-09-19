@@ -94,6 +94,12 @@ const deposit = async (req, res, next) => {
       type: 'DEPOSIT_SUCCESS',
     });
 
+    const io = require('../socket/io');
+    io.emitToUser(req.user._id, 'WALLET_UPDATE', {
+      balance: wallet.balance,
+      message: `₹${depositAmount.toLocaleString('en-IN')} added to your wallet successfully.`
+    });
+
     await createAuditLog({
       userId: req.user._id,
       action: 'DEPOSIT',
@@ -165,6 +171,12 @@ const withdraw = async (req, res, next) => {
       title: 'Withdrawal Successful',
       message: `₹${withdrawAmount.toLocaleString('en-IN')} has been withdrawn from your wallet.`,
       type: 'WITHDRAWAL_SUCCESS',
+    });
+
+    const io = require('../socket/io');
+    io.emitToUser(req.user._id, 'WALLET_UPDATE', {
+      balance: wallet.balance,
+      message: `₹${withdrawAmount.toLocaleString('en-IN')} withdrawn successfully.`
     });
 
     await createAuditLog({

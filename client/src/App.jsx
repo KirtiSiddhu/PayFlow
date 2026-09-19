@@ -1,5 +1,6 @@
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { AuthProvider } from './context/AuthContext';
+import { SocketProvider } from './context/SocketContext';
 import ProtectedRoute from './components/ProtectedRoute';
 import Layout from './components/Layout';
 
@@ -28,41 +29,43 @@ function App() {
   return (
     <BrowserRouter>
       <AuthProvider>
-        <Routes>
-          {/* Public */}
-          <Route path="/login" element={<Login />} />
-          <Route path="/register" element={<Register />} />
+        <SocketProvider>
+          <Routes>
+            {/* Public */}
+            <Route path="/login" element={<Login />} />
+            <Route path="/register" element={<Register />} />
 
-          {/* User Routes */}
-          <Route element={<ProtectedRoute />}>
-            <Route element={<Layout />}>
-              <Route path="/" element={<Navigate to="/dashboard" replace />} />
-              <Route path="/dashboard" element={<Dashboard />} />
-              <Route path="/wallet" element={<Wallet />} />
-              <Route path="/send" element={<SendMoney />} />
-              <Route path="/request" element={<RequestMoney />} />
-              <Route path="/withdraw" element={<Withdraw />} />
-              <Route path="/transactions" element={<Transactions />} />
-              <Route path="/transactions/:id" element={<TransactionDetails />} />
-              <Route path="/profile" element={<Profile />} />
-              <Route path="/notifications" element={<Notifications />} />
+            {/* User Routes */}
+            <Route element={<ProtectedRoute />}>
+              <Route element={<Layout />}>
+                <Route path="/" element={<Navigate to="/dashboard" replace />} />
+                <Route path="/dashboard" element={<Dashboard />} />
+                <Route path="/wallet" element={<Wallet />} />
+                <Route path="/send" element={<SendMoney />} />
+                <Route path="/request" element={<RequestMoney />} />
+                <Route path="/withdraw" element={<Withdraw />} />
+                <Route path="/transactions" element={<Transactions />} />
+                <Route path="/transactions/:id" element={<TransactionDetails />} />
+                <Route path="/profile" element={<Profile />} />
+                <Route path="/notifications" element={<Notifications />} />
+              </Route>
             </Route>
-          </Route>
 
-          {/* Admin Routes */}
-          <Route element={<ProtectedRoute adminOnly />}>
-            <Route element={<Layout admin />}>
-              <Route path="/admin" element={<Navigate to="/admin/dashboard" replace />} />
-              <Route path="/admin/dashboard" element={<AdminDashboard />} />
-              <Route path="/admin/users" element={<Users />} />
-              <Route path="/admin/transactions" element={<AdminTransactions />} />
-              <Route path="/admin/audit-logs" element={<AuditLogs />} />
+            {/* Admin Routes */}
+            <Route element={<ProtectedRoute adminOnly />}>
+              <Route element={<Layout admin />}>
+                <Route path="/admin" element={<Navigate to="/admin/dashboard" replace />} />
+                <Route path="/admin/dashboard" element={<AdminDashboard />} />
+                <Route path="/admin/users" element={<Users />} />
+                <Route path="/admin/transactions" element={<AdminTransactions />} />
+                <Route path="/admin/audit-logs" element={<AuditLogs />} />
+              </Route>
             </Route>
-          </Route>
 
-          {/* Catch all */}
-          <Route path="*" element={<Navigate to="/dashboard" replace />} />
-        </Routes>
+            {/* Catch all */}
+            <Route path="*" element={<Navigate to="/dashboard" replace />} />
+          </Routes>
+        </SocketProvider>
       </AuthProvider>
     </BrowserRouter>
   );

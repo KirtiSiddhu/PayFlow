@@ -146,6 +146,7 @@ export const AuthProvider = ({ children }) => {
       refreshNotifications,
       loadUserData,
       setUser,
+      setUnreadCount,
     }}>
       {children}
     </AuthContext.Provider>

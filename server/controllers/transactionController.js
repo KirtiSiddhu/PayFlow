@@ -114,6 +114,21 @@ const sendMoney = async (req, res, next) => {
       type: 'MONEY_RECEIVED',
     });
 
+    // Emit real-time events via Socket.io
+    const io = require('../socket/io');
+    io.emitToUser(req.user._id, 'WALLET_UPDATE', {
+      balance: senderWallet.balance,
+      message: `₹${sendAmount.toLocaleString('en-IN')} sent successfully.`
+    });
+    io.emitToUser(recipientId, 'NEW_NOTIFICATION', {
+      title: 'Money Received 💰',
+      message: `You received ₹${sendAmount.toLocaleString('en-IN')} from ${req.user.name}.`
+    });
+    io.emitToUser(recipientId, 'WALLET_UPDATE', {
+      balance: recipientWallet.balance,
+      message: `You just received ₹${sendAmount.toLocaleString('en-IN')}!`
+    });
+
     await createAuditLog({
       userId: req.user._id,
       action: 'TRANSFER',

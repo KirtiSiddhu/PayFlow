@@ -39,6 +39,12 @@ const createRequest = async (req, res, next) => {
       type: 'MONEY_REQUEST_RECEIVED',
     });
 
+    const io = require('../socket/io');
+    io.emitToUser(recipientId, 'NEW_NOTIFICATION', {
+      title: 'Money Request Received 📨',
+      message: `${req.user.name} requested ₹${requestAmount.toLocaleString('en-IN')} from you.`
+    });
+
     await createAuditLog({
       userId: req.user._id,
       action: 'MONEY_REQUEST',
@@ -189,6 +195,20 @@ const acceptRequest = async (req, res, next) => {
       title: 'Money Request Paid',
       message: `You paid ₹${moneyRequest.amount.toLocaleString('en-IN')} as requested.`,
       type: 'MONEY_SENT',
+    });
+
+    const io = require('../socket/io');
+    io.emitToUser(moneyRequest.requester.toString(), 'WALLET_UPDATE', {
+      balance: requesterWallet.balance,
+      message: `${req.user.name} paid your request of ₹${moneyRequest.amount.toLocaleString('en-IN')}!`
+    });
+    io.emitToUser(moneyRequest.requester.toString(), 'NEW_NOTIFICATION', {
+      title: 'Money Request Accepted 🎉',
+      message: `${req.user.name} accepted your request and sent ₹${moneyRequest.amount.toLocaleString('en-IN')}.`
+    });
+    io.emitToUser(req.user._id, 'WALLET_UPDATE', {
+      balance: payerWallet.balance,
+      message: `You paid ₹${moneyRequest.amount.toLocaleString('en-IN')} successfully.`
     });
 
     res.json({ success: true, message: 'Request accepted and payment processed' });
