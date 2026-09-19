@@ -41,33 +41,8 @@ const deposit = async (req, res, next) => {
 
     const transactionId = generateTransactionId();
 
-    // Simulate payment gateway — random 95% success rate for demo
-    const isSuccess = Math.random() > 0.05;
-
-    if (!isSuccess) {
-      // Create failed transaction record
-      await Transaction.create([{
-        transactionId,
-        receiver: req.user._id,
-        wallet: wallet._id,
-        type: 'DEPOSIT',
-        amount: depositAmount,
-        status: 'FAILED',
-        description: `Deposit via ${paymentMethod} (Simulated failure)`,
-        metadata: { paymentMethod },
-      }], { session });
-
-      await session.commitTransaction();
-
-      await createNotification({
-        userId: req.user._id,
-        title: 'Deposit Failed',
-        message: `Your deposit of ₹${depositAmount.toLocaleString('en-IN')} failed. Please try again.`,
-        type: 'DEPOSIT_FAILED',
-      });
-
-      return res.status(400).json({ success: false, message: 'Payment failed. Please try again.' });
-    }
+    // Always succeed for this implementation
+    const isSuccess = true;
 
     // Successful deposit
     wallet.balance += depositAmount;
@@ -116,7 +91,8 @@ const deposit = async (req, res, next) => {
       data: { wallet: updatedWallet, transactionId },
     });
   } catch (error) {
-    await session.abortTransaction();
+    try { await session.abortTransaction(); } catch (e) {}
+    console.error("Deposit error:", error);
     next(error);
   } finally {
     session.endSession();
