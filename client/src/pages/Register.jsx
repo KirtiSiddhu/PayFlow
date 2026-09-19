@@ -40,25 +40,28 @@ const Register = () => {
       <div className="w-full max-w-5xl bg-white rounded-3xl shadow-xl border border-gray-100 overflow-hidden flex flex-col md:flex-row-reverse">
         
         {/* Right Side: Image / Branding */}
-        <div className="md:w-1/2 gradient-success p-8 md:p-12 text-white flex flex-col justify-between relative overflow-hidden">
+        <div 
+          className="md:w-1/2 p-8 md:p-12 text-white flex flex-col justify-between relative overflow-hidden"
+          style={{
+            backgroundImage: "linear-gradient(to bottom, rgba(13, 148, 136, 0.8), rgba(4, 47, 46, 0.9)), url('https://images.unsplash.com/photo-1616077168712-fc6c788db4af?ixlib=rb-1.2.1&auto=format&fit=crop&w=1000&q=80')",
+            backgroundSize: 'cover',
+            backgroundPosition: 'center'
+          }}
+        >
           <div className="relative z-10">
             <div className="flex items-center gap-3 mb-12">
-              <div className="w-10 h-10 bg-white/20 rounded-xl flex items-center justify-center backdrop-blur-sm">
+              <div className="w-10 h-10 bg-white/20 rounded-xl flex items-center justify-center backdrop-blur-sm shadow-lg">
                 <Zap className="w-6 h-6 text-white" />
               </div>
-              <span className="text-xl font-bold tracking-tight">PayWave</span>
+              <span className="text-2xl font-bold tracking-tight shadow-sm">PayWave</span>
             </div>
-            <h1 className="text-4xl md:text-5xl font-bold mb-4 leading-tight">
+            <h1 className="text-4xl md:text-5xl font-bold mb-4 leading-tight drop-shadow-md">
               Join the financial revolution.
             </h1>
-            <p className="text-emerald-50 text-lg max-w-sm">
+            <p className="text-teal-50 text-lg max-w-sm drop-shadow">
               Create an account in minutes and take full control of your wealth.
             </p>
           </div>
-          
-          {/* Abstract circles design */}
-          <div className="absolute -top-24 -right-24 w-96 h-96 bg-white/10 rounded-full blur-3xl"></div>
-          <div className="absolute bottom-1/4 -left-24 w-72 h-72 bg-emerald-500/30 rounded-full blur-2xl"></div>
         </div>
 
         {/* Left Side: Register Form */}
